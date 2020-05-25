@@ -101,7 +101,9 @@ build_install_crossystem() {
     apt install -y vboot-utils
 
     #install clang and pre-reqs
-    apt install -y clang uuid-dev meson pkg-config cmake libcmocka-dev cargo
+    # target unstable for now to work around #173, without breaking libinput-gestures
+    #TODO: when package build system is available, targeting unstable won't be necessary.
+    apt install -y -t unstable clang uuid-dev meson pkg-config cmake libcmocka-dev cargo
 
     flashmap_src=/root/flashmap
     mosys_src=/root/mosys
@@ -159,6 +161,8 @@ cp $build_resources/logo/icons/ascii/* $outmnt/InstallResources/icons/
 cp scripts/InstallScripts/* $outmnt/InstallResources/
 cp scripts/InstallScripts/InstallPrawnOS.sh $outmnt/
 chmod +x $outmnt/*.sh
+#Make gnome postinstall executable 
+chmod +x $outmnt/InstallResources/Niceties/*.sh
 
 #Setup the chroot for apt
 #This is what https://wiki.debian.org/EmDebian/CrossDebootstrap suggests
@@ -210,16 +214,25 @@ chroot $outmnt apt-get autoremove --purge
 chroot $outmnt apt-get clean
 
 #Download support for libinput-gestures
-chroot $outmnt apt install -y libinput-tools xdotool build-essential
 #Package is copied into /InstallResources/packages
+chroot $outmnt apt install -y libinput-tools xdotool
 
-chroot $outmnt apt-get install -y -t testing -d xsecurelock
+# target unstable for now to work around #173, without breaking libinput-gestures
+#TODO: when package build system is available, targeting unstable won't be necessary.
+chroot $outmnt apt install -y -t unstable build-essential
+
+chroot $outmnt apt-get install -y -t unstable -d xsecurelock
 
 #Download the packages to be installed by Install.sh:
-chroot $outmnt apt-get install -y -d xorg acpi-support lightdm tasksel dpkg librsvg2-common xorg xserver-xorg-input-libinput alsa-utils anacron avahi-daemon eject iw libnss-mdns xdg-utils lxqt crda xfce4 dbus-user-session system-config-printer tango-icon-theme xfce4-power-manager xfce4-terminal xfce4-goodies mousepad vlc libutempter0 xterm numix-gtk-theme dconf-cli dconf-editor plank network-manager-gnome network-manager-openvpn network-manager-openvpn-gnome dtrx emacs accountsservice sudo pavucontrol-qt papirus-icon-theme sysfsutils bluetooth
+chroot $outmnt apt-get install -y -d xorg acpi-support lightdm tasksel dpkg librsvg2-common xorg xserver-xorg-input-libinput alsa-utils anacron avahi-daemon eject iw libnss-mdns xdg-utils lxqt crda xfce4 dbus-user-session system-config-printer tango-icon-theme xfce4-power-manager xfce4-terminal xfce4-goodies mousepad vlc libutempter0 xterm numix-gtk-theme dconf-cli dconf-editor plank network-manager-gnome network-manager-openvpn network-manager-openvpn-gnome dtrx emacs accountsservice sudo pavucontrol-qt papirus-icon-theme sysfsutils bluetooth gdm3 gnome-session dbus-user-session gnome-shell-extensions nautilus nautilus-admin file-roller gnome-software gnome-software-plugin-flatpak gedit gnome-system-monitor gnome-clocks evince gnome-logs gnome-disk-utility gnome-terminal epiphany-browser fonts-cantarell gnome-tweaks seahorse materia-gtk-theme eog
+#Let's try to fix offline install by including stable versions of these packages too:
+chroot $outmnt apt-get install -y -d libegl-mesa0 libegl1-mesa libgl1-mesa-dri libglapi-mesa libglu1-mesa libglx-mesa0
+#Let's download recent mesa packages from unstable
+chroot $outmnt apt-get install -y -t unstable -d libegl-mesa0 libegl1-mesa libgl1-mesa-dri libglapi-mesa libglu1-mesa libglx-mesa0
 
 chroot $outmnt apt-get install -d -y firefox-esr
 # grab chromium as well, since sound is still broken in firefox for some media
+chroot $outmnt apt-get install -d -y chromium
 
 #Cleanup hosts
 rm -rf $outmnt/etc/hosts #This is what https://wiki.debian.org/EmDebian/CrossDebootstrap suggests
