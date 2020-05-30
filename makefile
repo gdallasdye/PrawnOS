@@ -13,14 +13,14 @@
 # You should have received a copy of the GNU General Public License
 # along with PrawnOS.  If not, see <https://www.gnu.org/licenses/>.
 
-KVER=5.4.29
+KVER=5.4.43
 ifeq ($(DEBIAN_SUITE),)
 DEBIAN_SUITE=buster
 endif
 ifeq ($(PRAWNOS_SUITE),)
-PRAWNOS_SUITE=Shiba
+PRAWNOS_SUITE=Silicon
 endif
-OUTNAME=PrawnOS-$(PRAWNOS_SUITE)-c201.img
+OUTNAME=PrawnOS-$(PRAWNOS_SUITE)-veyron.img
 BASE=$(OUTNAME)-BASE
 
 

@@ -35,9 +35,14 @@ RESOURCES=$ROOT_DIR/resources/BuildResources
 
 [ ! -d build ] && mkdir build
 cd build
-# build Linux-libre, with ath9k_htc
+
+# build either Linux-libre, with ath9k_htc
 [ ! -f linux-libre-$KVER-gnu.tar.lz ] && wget https://www.linux-libre.fsfla.org/pub/linux-libre/releases/$KVER-gnu/linux-libre-$KVER-gnu.tar.lz
 [ ! -d linux-$KVER ] && tar --lzip -xvf linux-libre-$KVER-gnu.tar.lz && FRESH=true
+# or build Linux-mainline, with ath9k_htc
+#[ ! -f linux-$KVER.tar.xz ] && wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-$KVER.tar.xz
+#[ ! -d linux-$KVER ] && tar -xvf linux-$KVER.tar.xz && FRESH=true
+
 cd linux-$KVER
 make clean
 make mrproper
@@ -49,3 +54,4 @@ make mrproper
 cp $RESOURCES/config .config
 make menuconfig ARCH=arm CROSS_COMPILE=arm-none-eabi- .config
 cp .config $RESOURCES/config
+

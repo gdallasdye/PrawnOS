@@ -150,7 +150,8 @@ install() {
     done
 
     echo Writing Filesystem, this will take about 4 minutes...
-    mkfs.ext4 -F -b 1024 $ROOT_PARTITION
+    mkfs.ext4 -F -b 1024 $ROOT_PARTITION         #Format with ext4 filesystem
+    #mkfs.xfs -f $ROOT_PARTITION                 #Format with xfs filesystem
     INSTALL_MOUNT=/mnt/install_mount
     mkdir -p $INSTALL_MOUNT/
     mount $ROOT_PARTITION $INSTALL_MOUNT/

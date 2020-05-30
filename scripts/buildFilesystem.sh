@@ -100,10 +100,13 @@ create_image() {
   cgpt add -i 2 -t data -b $root_start -s $root_size -l Root $1
   # $root_size is in 512 byte blocks while ext4 uses a block size of 1024 bytes
   losetup -P $2 $1
-  mkfs.ext4 -F -b 1024 ${2}p2 $(($root_size / 2))
+  
+  mkfs.ext4 -F -b 1024 ${2}p2 $(($root_size / 2))       	#Formats with ext4 
+  #mkfs.xfs ${2}p2	                                        #Formats with xfs
 
   # mount the / partition
-  mount -o noatime ${2}p2 $5
+  mount -o noatime ${2}p2 $5		                		#Mounts the ext4 partition
+  #mount ${2}p2 $5			                        		#Mounts the xfs partition
 }
 
 build_install_crossystem() {

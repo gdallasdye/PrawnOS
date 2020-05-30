@@ -46,15 +46,26 @@ make toolchain
 make -C target_firmware
 cd ..
 
-# build Linux-libre, with ath9k_htc
+# build either Linux-libre, with ath9k_htc
 [ ! -f linux-libre-$KVER-gnu.tar.lz ] && wget https://www.linux-libre.fsfla.org/pub/linux-libre/releases/$KVER-gnu/linux-libre-$KVER-gnu.tar.lz
 [ ! -f linux-libre-$KVER-gnu.tar.lz.sign ] && wget https://www.linux-libre.fsfla.org/pub/linux-libre/releases/$KVER-gnu/linux-libre-$KVER-gnu.tar.lz.sign
-
 #verify the signature
 gpg --import $RESOURCES/linux-libre-signing-key.gpg
 gpg --verify linux-libre-$KVER-gnu.tar.lz.sign linux-libre-$KVER-gnu.tar.lz
 
+# or build Linux-mainline, with ath9k_htc
+#[ ! -f linux-$KVER.tar.xz ] && wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-$KVER.tar.xz
+#[ ! -f linux-$KVER.tar.sign ] && wget https://cdn.kernel.org/pub/linux/kernel/v5.x/linux-$KVER.tar.sign
+#TODO: find a signing key.gpg for mainline kernel
+#gpg --import $RESOURCES/linux-libre-signing-key.gpg
+#gpg --verify linux-$KVER.tar.sign linux-libre-$KVER-gnu.tar.lz
+
+#Extract the Linux-Libre sources
 [ ! -d linux-$KVER ] && tar --lzip -xvf linux-libre-$KVER-gnu.tar.lz && FRESH=true
+
+#Or extract Linux-mainline sources
+#[ ! -d linux-$KVER ] && tar -xvf linux-$KVER.tar.xz && FRESH=true
+
 cd linux-$KVER
 make clean
 make mrproper
@@ -80,3 +91,4 @@ vbutil_kernel --pack vmlinux.kpart \
               --bootloader bootloader.bin
 cd ..
 cd $ROOT_DIR
+
