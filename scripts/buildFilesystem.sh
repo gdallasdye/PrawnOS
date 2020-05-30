@@ -256,8 +256,15 @@ chroot $outmnt apt-get install -y -d xorg acpi-support lightdm tasksel dpkg libr
 #Download the gnome packages
 chroot $outmnt apt-get install -y -d gdm3 gnome-session dbus-user-session gnome-shell-extensions nautilus nautilus-admin file-roller gnome-software gnome-software-plugin-flatpak gedit gnome-system-monitor gnome-clocks evince gnome-logs gnome-disk-utility gnome-terminal epiphany-browser fonts-cantarell gnome-tweaks seahorse materia-gtk-theme eog libpeas-1.0-0 gir1.2-peas-1.0 libgtk3-perl
 
-#download mesa packages
-chroot $outmnt apt-get install -y -d libegl-mesa0 libegl1-mesa libgl1-mesa-dri libglapi-mesa libglu1-mesa libglx-mesa0
+#download stable mesa packages
+#chroot $outmnt apt-get install -y -d libegl-mesa0 libegl1-mesa libgl1-mesa-dri libglapi-mesa libglu1-mesa libglx-mesa0
+
+#Cleanup libc6-dev from the mosys section, as it "Breaks: libgcc-8-dev (< 8.4.0-2~) but 8.3.0-6 is to be installed" when downloading the packages to be installed by Install.sh:
+#This used to fix the xsecurelock install, now let's test if if fixes unstable mesa
+chroot $outmnt apt-get purge -y --auto-remove libc6-dev
+
+#download unstable mesa packages
+chroot $outmnt apt-get install -t unstable -y -d libegl-mesa0 libegl1-mesa libgl1-mesa-dri libglapi-mesa libglu1-mesa libglx-mesa0
 
 chroot $outmnt apt-get install -d -y firefox-esr
 # grab chromium as well, since sound is still broken in firefox for some media

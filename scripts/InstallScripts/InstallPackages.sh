@@ -37,7 +37,7 @@ dpkg-reconfigure tzdata
 #Install shared packages
 DEBIAN_FRONTEND=noninteractive apt install -y xorg acpi-support tasksel dpkg librsvg2-common xorg xserver-xorg-input-libinput alsa-utils anacron avahi-daemon eject iw libnss-mdns xdg-utils dconf-cli dconf-editor sudo dtrx emacs sysfsutils bluetooth
 DEBIAN_FRONTEND=noninteractive apt install -y network-manager-gnome network-manager-openvpn network-manager-openvpn-gnome
-DEBIAN_FRONTEND=noninteractive apt install -y libegl-mesa0 libegl1-mesa libgl1-mesa-dri libglapi-mesa libglu1-mesa libglx-mesa0
+#DEBIAN_FRONTEND=noninteractive apt install -y libegl-mesa0 libegl1-mesa libgl1-mesa-dri libglapi-mesa libglu1-mesa libglx-mesa0
 
 # Browsers
 DEBIAN_FRONTEND=noninteractive apt install -y firefox-esr
@@ -76,6 +76,9 @@ then
   # gsettings set org.gnome.desktop.peripherals.touchpad natural-scroll false
   #Tap to click is natural
   # gsettings set org.gnome.desktop.peripherals.touchpad tap-to-click true
+
+  #Install unstable mesa packages for gnome
+  DEBIAN_FRONTEND=noninteractive apt install -t unstable -y libegl-mesa0 libegl1-mesa libgl1-mesa-dri libglapi-mesa libglu1-mesa libglx-mesa0
 
 
 fi
