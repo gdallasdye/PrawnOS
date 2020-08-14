@@ -75,6 +75,16 @@ ROOT_DEV="${BLKID%1:*}"
 
 echo ${ROOT_DEV} > /dev/tty1
 
+# happens when kernel takes its time looking for devices
+if [ -z ${ROOT_DEV} ]
+then
+    sleep 1
+    ROOT_DEV="${BLKID%1:*}"
+    # if device is still not seen, bail out
+    [ -z ${ROOT_DEV} ] && rescue_shell
+fi
+
+
 # label any partition on the system with RESCUESHELL to enter the initramfs rescue shell before mount and root_switch.
 # you can do this with "cgpt add -i 1 -l RESCUESHELL /dev/sda" for example to label the first partiton of a usb drive.
 if [ -n "$(blkid | grep RESCUESHELL)" ]
