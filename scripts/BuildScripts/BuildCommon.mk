@@ -30,7 +30,6 @@ else
 	endif
 endif
 
-
 #Place all shared make vars below
 #=========================================================================================
 ### GLOBALS
