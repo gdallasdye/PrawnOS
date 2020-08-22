@@ -81,6 +81,8 @@ PRAWNOS_FILESYSTEM_RESOURCES=$6
 TARGET_ARCH=$7
 PRAWNOS_BUILD=$8
 
+[ $(uname -m) = "$TARGET_ARCH" ] && DEBOOTSTRAP=debootstrap || DEBOOTSTRAP=qemu-debootstrap
+
 outmnt=$(mktemp -d -p "$(pwd)")
 
 outdev=$(losetup -f)
@@ -167,7 +169,8 @@ fi
 export DEBIAN_FRONTEND=noninteractive
 # need ca-certs, gnupg, openssl to handle https apt links and key adding for deb.prawnos.com
 printf -v debootstrap_debs_install_joined '%s,' "${debootstrap_debs_install[@]}"
-qemu-debootstrap --arch $TARGET_ARCH $DEBIAN_SUITE \
+
+$DEBOOTSTRAP     --arch $TARGET_ARCH $DEBIAN_SUITE \
                  --include ${debootstrap_debs_install_joined%,} \
                  --keyring=$build_resources_apt/debian-archive-keyring.gpg \
                  $outmnt \
