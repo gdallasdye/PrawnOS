@@ -1,5 +1,0 @@
-PBUILDERSATISFYDEPENDSCMD="/usr/lib/pbuilder/pbuilder-satisfydepends-apt"
-DISTRIBUTION=testing
-ARCHITECTURE=arm64
-DEBOOTSTRAP=debootstrap
-DEBOOTSTRAPOPTS=( '--variant=buildd' '--arch=arm64' )

@@ -20,16 +20,6 @@ endif
 
 export $(TARGET)
 
-ifeq ($(shell uname -m),$(TARGET_ARM64))
-	HOST := native
-else
-	ifeq ($(shell uname -m),$(PRAWNOS_ARMHF))
-		HOST := native
-	else
-		HOST := qemu
-	endif
-endif
-
 #Place all shared make vars below
 #=========================================================================================
 ### GLOBALS
@@ -143,7 +133,7 @@ PRAWNOS_FILESYSTEM_PACKAGES := $(PRAWNOS_FILESYSTEM)/packages
 ### PBUILDER RESOURCES
 PBUILDER_DIR := $(PRAWNOS_FILESYSTEM_RESOURCES)/pbuilder
 PBUILDER_CHROOT := $(PRAWNOS_BUILD)/prawnos-pbuilder-$(TARGET)-base.tgz
-PBUILDER_RC := $(PBUILDER_DIR)/prawnos-pbuilder-$(TARGET)-$(HOST).rc
+PBUILDER_RC := $(PBUILDER_DIR)/prawnos-pbuilder-$(TARGET).rc
 PBUILDER_HOOKS := $(PBUILDER_DIR)/hooks
 
 PBUILDER_VARS := $(PBUILDER_CHROOT) $(PBUILDER_RC) $(PBUILDER_HOOKS)
