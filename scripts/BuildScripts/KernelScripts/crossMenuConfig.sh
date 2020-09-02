@@ -59,5 +59,5 @@ else
 fi
 
 cp $RESOURCES/config .config
-make menuconfig ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILER .config
+make nconfig ARCH=$ARCH CROSS_COMPILE=$CROSS_COMPILER .config
 cp .config $RESOURCES/config
