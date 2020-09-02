@@ -23,7 +23,7 @@ export $(TARGET)
 ifeq ($(shell uname -m),$(TARGET_ARM64))
 	HOST := native
 else
-	ifeq ($(shell uname -m),armv7l)
+	ifeq ($(shell uname -m),$(PRAWNOS_ARMHF))
 		HOST := native
 	else
 		HOST := qemu
