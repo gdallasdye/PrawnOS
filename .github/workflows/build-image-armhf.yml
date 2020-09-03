@@ -8,10 +8,11 @@ jobs:
     name: build
     runs-on: ubuntu-latest
     steps:
-      - name: checkout project
-        uses: actions/checkout@master
       - name: build image
-        run: /bin/bash /PrawnOS/tests/build-image-armhf.sh "$GITHUB_SHA"
+        run: |
+          git clone https://github.com/Maccraft123/ShrimpOS.git
+          /bin/bash ./tests/build-image-armhf.sh "$GITHUB_SHA"
+      
       - name: publish image
         uses: actions/upload-artifact@v2
         with:
