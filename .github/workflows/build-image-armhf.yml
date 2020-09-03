@@ -12,7 +12,7 @@ jobs:
         run: |
           git clone https://github.com/Maccraft123/ShrimpOS.git
           cd ShrimpOS
-          ./tests/build-image-armhf.sh "$GITHUB_SHA"
+          sudo ./tests/build-image-armhf.sh "$GITHUB_SHA"
       
       - name: publish image
         uses: actions/upload-artifact@v2
