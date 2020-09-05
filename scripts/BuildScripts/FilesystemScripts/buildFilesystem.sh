@@ -81,8 +81,6 @@ PRAWNOS_FILESYSTEM_RESOURCES=$6
 TARGET_ARCH=$7
 PRAWNOS_BUILD=$8
 
-[ $(uname -m) = "armv7l" ] && DEBOOTSTRAP=debootstrap || DEBOOTSTRAP=qemu-debootstrap
-
 outmnt=$(mktemp -d -p "$(pwd)")
 
 outdev=$(losetup -f)
@@ -160,7 +158,7 @@ create_image() {
 create_image $BASE $outdev 50M 40 $outmnt
 
 # use default debootstrap mirror if none is specified
-if [ -z $PRAWNOS_DEBOOTSTRAP_MIRROR ]
+if [ "$PRAWNOS_DEBOOTSTRAP_MIRROR" = "" ]
 then
     PRAWNOS_DEBOOTSTRAP_MIRROR=http://ftp.us.debian.org/debian
 fi
@@ -169,15 +167,12 @@ fi
 export DEBIAN_FRONTEND=noninteractive
 # need ca-certs, gnupg, openssl to handle https apt links and key adding for deb.prawnos.com
 printf -v debootstrap_debs_install_joined '%s,' "${debootstrap_debs_install[@]}"
-
-$DEBOOTSTRAP	--arch=$TARGET_ARCH \
-		--include=${debootstrap_debs_install_joined%,} \
-		--keyring=$build_resources_apt/debian-archive-keyring.gpg \
-		--cache-dir=$PRAWNOS_BUILD/debootstrap-apt-cache/ \
-		$DEBIAN_SUITE \
-		$outmnt \
-		$PRAWNOS_DEBOOTSTRAP_MIRROR \
-
+qemu-debootstrap --arch $TARGET_ARCH $DEBIAN_SUITE \
+                 --include ${debootstrap_debs_install_joined%,} \
+                 --keyring=$build_resources_apt/debian-archive-keyring.gpg \
+                 $outmnt \
+                 $PRAWNOS_DEBOOTSTRAP_MIRROR \
+                 --cache-dir=$PRAWNOS_BUILD/debootstrap-apt-cache/
 
 chroot $outmnt passwd -d root
 
