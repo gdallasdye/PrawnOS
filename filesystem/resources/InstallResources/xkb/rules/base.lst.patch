@@ -1,5 +1,15 @@
+<<<<<<< HEAD
+<<<<<<< HEAD:filesystem/resources/InstallResources/xkb/rules/base.lst.patch
 --- /mnt/sd/xkborig/rules/base.lst	2019-02-11 00:00:00.000000000 +0100
 +++ base.lst	2020-04-01 08:16:35.400556053 +0200
+=======
+--- /mnt/sd/xkborig/rules/evdev.lst	2019-02-11 00:00:00.000000000 +0100
++++ evdev.lst	2020-04-01 08:17:05.129558936 +0200
+>>>>>>> upstream/master:filesystem/resources/InstallResources/xkb/rules/evdev.lst.patch
+=======
+--- /mnt/sd/xkborig/rules/base.lst	2019-02-11 00:00:00.000000000 +0100
++++ base.lst	2020-04-01 08:16:35.400556053 +0200
+>>>>>>> upstream/master
 @@ -187,7 +187,15 @@
    teck227         Truly Ergonomic 227
    teck229         Truly Ergonomic 229

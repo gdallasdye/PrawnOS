@@ -57,6 +57,7 @@ base_debs_install=(
     nano
     net-tools
     netcat-openbsd
+    network-manager
     parted
     psmisc
     rsync
@@ -88,14 +89,11 @@ base_debs_download=(
     libnss-mdns
     librsvg2-common
     libutempter0
-    lightdm
-    mousepad
     sudo
     sysfsutils
     tasksel
     vlc
     xdg-utils
-    xorg
     xorg
     xserver-xorg-input-libinput
 )
@@ -114,6 +112,8 @@ xfce_debs_download=(
     dbus-user-session
     dconf-cli
     dconf-editor
+    lightdm
+    mousepad
     network-manager-gnome
     network-manager-openvpn
     network-manager-openvpn-gnome
@@ -131,6 +131,7 @@ xfce_debs_download=(
 lxqt_debs_download=(
     lightdm
     lxqt
+    mousepad
     network-manager-gnome
     network-manager-openvpn
     network-manager-openvpn-gnome
@@ -142,13 +143,11 @@ gnome_debs_download=(
     dconf-cli
     dconf-editor
     eog
-    epiphany-browser
     evince
     file-roller
     fonts-cantarell
     gdm3
     gedit
-    gir1.2-peas-1.0
     gnome-clocks
     gnome-disk-utility
     gnome-logs
@@ -159,10 +158,6 @@ gnome_debs_download=(
     gnome-system-monitor
     gnome-terminal
     gnome-tweaks
-    libgtk3-perl
-    libpeas-1.0-0
-    lightdm
-    lxqt
     materia-gtk-theme
     nautilus
     nautilus-admin
