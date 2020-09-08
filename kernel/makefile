@@ -17,42 +17,17 @@ KERNEL_PATCHES := $(PRAWNOS_KERNEL)/patches/$(TARGET)
 KERNEL_BUILD_LOG := $(PRAWNOS_BUILD_LOGS)/kernel-log-$(TARGET).txt
 
 ### UNIVERSAL VARS ###
-<<<<<<< HEAD
-KERNEL_SOURCES := $(PRAWNOS_KERNEL)/sources
 KERNEL_TAR := $(KERNEL_SOURCES)/linux-$(KVER).tar.gz
-=======
-KERNEL_TAR := $(PRAWNOS_BUILD_SOURCES)/linux-libre-$(KVER)-gnu.tar.lz
->>>>>>> upstream/master
-KERNEL_TAR_SIGNATURE := $(KERNEL_TAR).sign
-KERNEL_LINUX_LIBRE_PUB := $(KERNEL_SHARED_RESOURCES)/linux-libre-signing-key.gpg
-
-ATH9K_EXTRACTED := $(PRAWNOS_ATH9K_BUILD)/.ath9k_extracted
-ATH9K_TAR := $(KERNEL_SHARED_RESOURCES)/open-ath9k-htc-firmware.tar.gz
-ATH9K := open-ath9k-htc-firmware
-ATH9K_9271_FW := $(PRAWNOS_ATH9K_BUILD)/target_firmware/htc_9271.fw
-ATH9K_7010_FW := $(PRAWNOS_ATH9K_BUILD)/target_firmware/htc_7010.fw
-ATH9K_BUILT := $(ATH9K_9271_FW)
-ATH9K_BUILD_LOG := $(PRAWNOS_BUILD_LOGS)/ath9k-log.txt
-
-KERNEL_ATH9K_FIRMWARES := $(PRAWNOS_KERNEL_BUILD)/open-ath9k-firmware
-
-KERNEL_ATH9K_INSTALLED := $(KERNEL_ATH9K_FIRMWARES)/htc_9271.fw
 
 ### PHONY RULES
 .PHONY: kernel
 kernel: $(PRAWNOS_KERNEL_BUILT)
-
-.PHONY: ath9k
-ath9k: $(ATH9K_BUILT)
 
 .PHONY: patch_kernel
 patch_kernel: $(KERNEL_PATCHED)
 
 .PHONY: extract_kernel
 extract_kernel: $(KERNEL_EXTRACTED)
-
-.PHONY: extract_ath9k
-extract_ath9k: $(ATH9K_EXTRACTED)
 
 .PHONY: kernel_image_package
 kernel_image_package: $(PRAWNOS_KERNEL_BUILT)
@@ -70,18 +45,6 @@ kernel_config: $(KERNEL_PATCHED)
 clean_kernel:
 	rm -rf $(PRAWNOS_KERNEL_BUILD)
 
-.PHONY: clean_ath9k
-clean_ath9k:
-	rm -rf $(PRAWNOS_ATH9K_BUILD)
-
-### DEVELOPER RULES
-
-.PHONY: update_ath9k_tar
-update_ath9k_tar:
-	mkdir -p tmp/$(ATH9K)
-	git clone --depth 1 https://github.com/qca/open-ath9k-htc-firmware.git tmp/$(ATH9K)
-	cd tmp && tar czvf $(ATH9K_SOURCE) $(ATH9K)
-	rm -rf tmp/
 
 .PHONY: update_kernel_sig
 update_kernel_sig:
@@ -89,19 +52,12 @@ update_kernel_sig:
 
 ### REAL RULES
 
-$(KERNEL_TAR): | $(KERNEL_SOURCES) $(PRAWNOS_BUILD_LOGS) $(PRAWNOS_BUILD_SOURCES)
+$(KERNEL_TAR):
 	wget https://www.kernel.org/pub/linux/kernel/v5.x/linux-$(KVER).tar.gz -O $(KERNEL_TAR)
 
 $(KERNEL_EXTRACTED): $(KERNEL_TAR)
 	mkdir -p $(PRAWNOS_BUILD_DIRS)
 	tar -xvzf $(KERNEL_TAR) -C $(PRAWNOS_BUILD)
-
-$(KERNEL_ATH9K_FIRMWARES):
-	mkdir -p $(KERNEL_ATH9K_FIRMWARES)
-
-$(KERNEL_EXTRACTED): $(KERNEL_TAR)
-	tar --lzip -xvf $(KERNEL_TAR) -C $(PRAWNOS_BUILD)
-	touch $(KERNEL_EXTRACTED)
 
 $(KERNEL_PATCHED): $(KERNEL_EXTRACTED)
 	@echo $(PRAWNOS_KERNEL_BUILD)

@@ -168,6 +168,14 @@ gnome_debs_download=(
     seahorse
 )
 
+sway_debs_download=(
+    sway
+    brightnessctl
+    i3
+    swaylock
+    playerctl
+)
+
 # packages built by prawnos, to be installed when running InstallPrawnOS
 # and choosing xfce
 prawnos_xfce_debs_prebuilt_download=(

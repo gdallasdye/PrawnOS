@@ -1,0 +1,10 @@
+#!/bin/bash
+while true; do
+    battery_percentage=`cat /sys/class/power_supply/bq27500-0/capacity`
+
+    time=`date +"%H:%M"`
+    
+    result="$battery_percentage% | $time"
+    echo $result
+    sleep 5s
+done
