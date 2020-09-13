@@ -323,6 +323,9 @@ chroot $outmnt rm -f /etc/apt/apt.conf.d/80-retries
 #Copy systemd config. This is on the end to make sure that no package overrides this
 cp $build_resources/system.conf $outmnt/etc/systemd/
 
+#modify console-setup to not clear framebuffer(muh splash screen)
+grep -v setfont /etc/console-setup/cached_setup_font.sh > /tmp/cached_setup_font.sh
+cp /tmp/cached_setup_font.sh /etc/console-setup/cached_setup_font.sh
 
 # do a non-error cleanup
 umount -l $outmnt > /dev/null 2>&1
