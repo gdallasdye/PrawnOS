@@ -36,7 +36,6 @@ kernel_image_package: $(PRAWNOS_KERNEL_BUILT)
 
 .PHONY: kernel_config
 kernel_config: $(KERNEL_PATCHED)
-	mkdir -p $(PRAWNOS_BUILD_DIRS)
 	$(PRAWNOS_KERNEL_SCRIPTS_MENUCONFIG) $(KERNEL_RESOURCES) $(PRAWNOS_KERNEL_BUILD) $(TARGET)
 
 ### CLEAN RULES
@@ -56,7 +55,6 @@ $(KERNEL_TAR):
 	wget https://www.kernel.org/pub/linux/kernel/v5.x/linux-$(KVER).tar.gz -O $(KERNEL_TAR)
 
 $(KERNEL_EXTRACTED): $(KERNEL_TAR)
-	mkdir -p $(PRAWNOS_BUILD_DIRS)
 	tar -xvzf $(KERNEL_TAR) -C $(PRAWNOS_BUILD)
 
 $(KERNEL_PATCHED): $(KERNEL_EXTRACTED)
