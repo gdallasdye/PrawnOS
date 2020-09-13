@@ -323,14 +323,16 @@ chroot $outmnt rm -f /etc/apt/apt.conf.d/80-retries
 #Copy systemd config. This is on the end to make sure that no package overrides this
 cp $build_resources/system.conf $outmnt/etc/systemd/
 
-#modify console-setup to not clear framebuffer(muh splash screen)
-grep -v setfont /etc/console-setup/cached_setup_font.sh > /tmp/cached_setup_font.sh
-cp /tmp/cached_setup_font.sh /etc/console-setup/cached_setup_font.sh
-
 #install hwdb file for iio-sensor-proxy to work
 printf 'sensor:modalias:platform:*\nACCEL_MOUNT_MATRIX=-1, 0, 0; 0, -1, 0; 0, 0, -1\n' > /etc/udev/hwdb.d/61-sensor-local.hwdb
 systemd-hwdb update
 udevadm trigger
+
+#make bootsplash not disappear again
+systemctl mask plymouth-start
+dpkg-reconfigure -f noninteractive console-setup
+grep -v setfont /etc/console-setup/cached_setup_font.sh > /tmp/cached_setup_font.sh
+cp /tmp/cached_setup_font.sh /etc/console-setup/cached_setup_font.sh
 
 #TODO: c100pa-daemon
 
