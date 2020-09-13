@@ -61,7 +61,9 @@ ARCH_ARM64=arm64
 MAX_KERNEL_SIZE=$(expr 65536 \* 512)
 
 cd $BUILD_DIR
-make mrproper
+
+#FIXME: should be a better place to put it, but it works
+apt install -y build-essential flex libelf-dev libc6-dev binutils-dev libdwarf-dev
 
 #this arch nonsense is obnoxious.
 # armhf is just "arm" to the kernel and vbutil,
@@ -89,6 +91,7 @@ cp $RESOURCES/kernel.its .
 cp $RESOURCES/brcmfmac4354-sdio.bin brcm/
 cp $RESOURCES/brcmfmac4354-sdio.txt brcm/
 cp $RESOURCES/brcmfmac4354-sdio.txt 'brcm/brcmfmac4354-sdio.google,veyron-minnie-rev4.txt'
+make -j $(($(nproc) +1))  CROSS_COMPILE=$CROSS_COMPILER ARCH=$KERNEL_ARCH olddefconfig
 make -j $(($(nproc) +1))  CROSS_COMPILE=$CROSS_COMPILER ARCH=$KERNEL_ARCH $IMAGE
 make -j $(($(nproc) +1))  CROSS_COMPILE=$CROSS_COMPILER ARCH=$KERNEL_ARCH DTC_FLAGS="-@" dtbs
 

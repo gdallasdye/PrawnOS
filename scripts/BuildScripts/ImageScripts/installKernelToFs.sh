@@ -84,7 +84,7 @@ kernel_size=65536
 #blank the kernel partition first, with 32MiB of zeros
 dd if=/dev/zero of=${outdev}p1 conv=notrunc bs=512 count=$kernel_size
 #now write the new kernel
-dd if=build/$TARGET/linux-$KVER/vmlinux.kpart of=${outdev}p1 conv=notrunc
+dd if=build/$TARGET/linux/vmlinux.kpart of=${outdev}p1 conv=notrunc
 
 #install the kernel image package to the chroot so it can be updated by apt later
 #need to do funky things to avoid running the postinst script that dds the kernel to the kernel partition
@@ -98,7 +98,7 @@ dd if=build/$TARGET/linux-$KVER/vmlinux.kpart of=${outdev}p1 conv=notrunc
 #install the kernel modules and headers
 #we dont make any modules yet
 # make -C build/$TARGET/linux-$KVER ARCH=$KERNEL_ARCH INSTALL_MOD_PATH=$outmnt modules_install
-make -C build/$TARGET/linux-$KVER ARCH=$KERNEL_ARCH INSTALL_HDR_PATH=$outmnt/usr/src/linux-$KVER-gnu headers_install
+make -C build/$TARGET/linux ARCH=$KERNEL_ARCH INSTALL_HDR_PATH=$outmnt/usr/src/linux headers_install
 # the ath9k firmware is built into the kernel image, so nothing else must be done
 
 umount -l $outmnt > /dev/null 2>&1
