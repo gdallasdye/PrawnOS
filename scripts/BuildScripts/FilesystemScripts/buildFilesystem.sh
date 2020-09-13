@@ -327,6 +327,13 @@ cp $build_resources/system.conf $outmnt/etc/systemd/
 grep -v setfont /etc/console-setup/cached_setup_font.sh > /tmp/cached_setup_font.sh
 cp /tmp/cached_setup_font.sh /etc/console-setup/cached_setup_font.sh
 
+#install hwdb file for iio-sensor-proxy to work
+printf 'sensor:modalias:platform:*\nACCEL_MOUNT_MATRIX=-1, 0, 0; 0, -1, 0; 0, 0, -1\n' > /etc/udev/hwdb.d/61-sensor-local.hwdb
+systemd-hwdb update
+udevadm trigger
+
+#TODO: c100pa-daemon
+
 # do a non-error cleanup
 umount -l $outmnt > /dev/null 2>&1
 rmdir $outmnt > /dev/null 2>&1

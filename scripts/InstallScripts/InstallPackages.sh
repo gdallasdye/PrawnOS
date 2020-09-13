@@ -89,21 +89,21 @@ DEBIAN_FRONTEND=noninteractive apt install -y ${prawnos_base_debs_prebuilt_downl
 [ "$DE" = "sway" ] && apt install -y ${sway_debs_download[@]}
 
 #install the keymap by patching xkb, then bindings work for any desktop environment
-cp $DIR/xkb/compat/* /usr/share/X11/xkb/compat/
-cp $DIR/xkb/keycodes/* /usr/share/X11/xkb/keycodes/
-cp $DIR/xkb/symbols/* /usr/share/X11/xkb/symbols/
+#cp $DIR/xkb/compat/* /usr/share/X11/xkb/compat/
+#cp $DIR/xkb/keycodes/* /usr/share/X11/xkb/keycodes/
+#cp $DIR/xkb/symbols/* /usr/share/X11/xkb/symbols/
 
-patch /usr/share/X11/xkb/rules/base < $DIR/xkb/rules/base.patch
-patch /usr/share/X11/xkb/rules/base.lst < $DIR/xkb/rules/base.lst.patch
-patch /usr/share/X11/xkb/rules/base.xml < $DIR/xkb/rules/base.xml.patch
-patch /usr/share/X11/xkb/rules/evdev < $DIR/xkb/rules/evdev.patch
-patch /usr/share/X11/xkb/rules/evdev.lst < $DIR/xkb/rules/evdev.lst.patch
-patch /usr/share/X11/xkb/rules/evdev.xml < $DIR/xkb/rules/evdev.xml.patch
+#patch /usr/share/X11/xkb/rules/base < $DIR/xkb/rules/base.patch
+#patch /usr/share/X11/xkb/rules/base.lst < $DIR/xkb/rules/base.lst.patch
+#patch /usr/share/X11/xkb/rules/base.xml < $DIR/xkb/rules/base.xml.patch
+#patch /usr/share/X11/xkb/rules/evdev < $DIR/xkb/rules/evdev.patch
+#patch /usr/share/X11/xkb/rules/evdev.lst < $DIR/xkb/rules/evdev.lst.patch
+#patch /usr/share/X11/xkb/rules/evdev.xml < $DIR/xkb/rules/evdev.xml.patch
 
-patch /usr/share/X11/xkb/symbols/gb < $DIR/xkb/symbols/gb.patch
-patch /usr/share/X11/xkb/symbols/us < $DIR/xkb/symbols/us.patch
+#patch /usr/share/X11/xkb/symbols/gb < $DIR/xkb/symbols/gb.patch
+#patch /usr/share/X11/xkb/symbols/us < $DIR/xkb/symbols/us.patch
 
-cp  $DIR/xkb/keyboard /etc/default/keyboard
+#cp  $DIR/xkb/keyboard /etc/default/keyboard
 
 #disable ertm for csr8510 bluetooth, issue #117
 echo "module/bluetooth/parameters/disable_ertm = 1" > /etc/sysfs.conf
