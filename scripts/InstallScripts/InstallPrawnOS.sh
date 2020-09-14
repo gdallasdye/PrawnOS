@@ -310,7 +310,7 @@ expand() {
     #Name it "properly" - Probably not required, but looks nice
     sgdisk -c 2:Root $BOOT_DEVICE_NO_P
     #Reload the partition mapping
-    partprobe ${BOOT_DEVICE}2
+    partprobe ${BOOT_DEVICE} || true
     #Force the filesystem to fill the new partition
     resize2fs -f ${BOOT_DEVICE}2
     echo "/dev/${BOOT_DEVICE}2 / ext4 defaults,noatime 0 1" > /etc/fstab
