@@ -259,6 +259,14 @@ dpkg-reconfigure -f noninteractive console-setup
 grep -v setfont /etc/console-setup/cached_setup_font.sh > /tmp/cached_setup_font.sh
 cp /tmp/cached_setup_font.sh /etc/console-setup/cached_setup_font.sh
 
+mkdir -p /opt/git/
+cd /opt/git/
+git clone https://github.com/Maccraft123/c100pa-daemon.git
+cd c100pa-daemon
+make
+make install
+systemctl enable c100pa-daemon
+
 usermod -a -G sudo,netdev,input,video,bluetooth $username
 
 dmesg -E
