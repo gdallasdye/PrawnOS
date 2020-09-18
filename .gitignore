@@ -1,5 +1,5 @@
 tmp.*
 PrawnOS-Shiba-*
-PrawnOS-initramfs.cpio.gz
+PrawnOS-initramfs.cpio
 build
 kernel/sources/linux-*.tar.gz
