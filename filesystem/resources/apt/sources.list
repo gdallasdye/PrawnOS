@@ -1,2 +1,4 @@
 deb http://ftp.us.debian.org/debian suite main contrib non-free
 #deb-src http://ftp.us.debian.org/debian suite main
+deb [arch=armhf] https://download.docker.com/linux/debian buster stable
+# deb-src [arch=armhf] https://download.docker.com/linux/debian buster stable
