@@ -246,6 +246,11 @@ cp $build_resources_apt/deb.prawnos.com.gpg.key $outmnt/InstallResources/
 chroot $outmnt apt-key add /InstallResources/deb.prawnos.com.gpg.key
 chroot $outmnt apt update
 
+#Bring in the docker gpg keyring
+cp $build_resources_apt/deb.prawnos.com.gpg.key $outmnt/InstallResources/
+chroot $outmnt apt-key add /InstallResources/docker.gpg.key
+chroot $outmnt apt update
+
 #Copy splash screen
 cp $build_resources/PrawnOS-* $outmnt/
 
