@@ -247,8 +247,8 @@ chroot $outmnt apt-key add /InstallResources/deb.prawnos.com.gpg.key
 chroot $outmnt apt update
 
 #Bring in the docker gpg keyring
-cp $build_resources_apt/docker.gpg.key $outmnt/InstallResources/
-chroot $outmnt apt-key add /InstallResources/docker.gpg.key
+cp $build_resources_apt/docker.gpg $outmnt/InstallResources/
+chroot $outmnt apt-key add /InstallResources/docker.gpg
 chroot $outmnt apt update
 
 #Copy splash screen
