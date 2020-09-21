@@ -1,0 +1,2 @@
+deb [arch=armhf] https://download.docker.com/linux/debian buster stable
+# deb-src [arch=armhf] https://download.docker.com/linux/debian buster stable
