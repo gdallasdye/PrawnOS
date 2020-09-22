@@ -120,6 +120,11 @@ mkdir -p $initramfs_src
 mkdir $initramfs_src/bin
 mkdir $initramfs_src/dev
 mkdir $initramfs_src/etc
+#mkdir $initramfs_src/etc/selinux
+#mkdir $initramfs_src/etc/selinux/default
+#mkdir $initramfs_src/etc/selinux/default/policy
+#mkdir $initramfs_src/etc/selinux/targeted
+#mkdir $initramfs_src/etc/selinux/targeted/policy
 mkdir $initramfs_src/newroot
 mkdir $initramfs_src/boot
 mkdir $initramfs_src/proc
@@ -130,6 +135,14 @@ mkdir $initramfs_src/run/cryptsetup
 mkdir $initramfs_src/lib
 
 mknod $initramfs_src/dev/console c 5 1
+#mknod $initramfs_src/dev/fb0 c 29 0
+#mknod $initramfs_src/dev/fb1 c 29 32
+#mknod $initramfs_src/dev/fb2 c 29 64
+#mknod $initramfs_src/dev/fb3 c 29 96
+#mknod $initramfs_src/dev/fb4 c 29 128
+#mknod $initramfs_src/dev/fb5 c 29 160
+#mknod $initramfs_src/dev/fb6 c 29 192
+#mknod $initramfs_src/dev/fb7 c 29 224
 mknod $initramfs_src/dev/null c 1 3
 mknod $initramfs_src/dev/tty c 5 0
 mknod $initramfs_src/dev/urandom c 1 9
@@ -163,6 +176,14 @@ cp $outmnt/lib/$LIBS_DIR/libgcc_s.so.1 $initramfs_src/lib/$LIBS_DIR/
 cp $RESOURCES/initramfs-init $initramfs_src/init
 chmod +x $initramfs_src/init
 cp $initramfs_src/init $initramfs_src/sbin/init
+
+#add selinux targeted policy, so that the splashscreen may run
+#TODO: selinux is normally set to off, on or permissive. Default mode for selinux is default
+#Normally on Debian, one has the option to uninstall apparmor then enable selinux
+#So what makes what complain about the targeted policy being missing
+#link from targeted policy to default policy, in lieu of duplicating
+#cp $RESOURCES/policy.31 $initramfs_src/etc/selinux/targeted/policy/policy.31
+#cp $initramfs_src/etc/selinux/targeted/policy/policy.31 $initramfs_src/etc/selinux/default/policy/policy.31
 
 #compress and install
 rm -rf $outmnt/boot/PrawnOS-initramfs.cpio
