@@ -321,8 +321,9 @@ echo -n "127.0.0.1        PrawnOS" > $outmnt/etc/hosts
 #Cleanup apt retry
 chroot $outmnt rm -f /etc/apt/apt.conf.d/80-retries
 
-#Copy systemd config. This is on the end to make sure that no package overrides this
-cp $build_resources/system.conf $outmnt/etc/systemd/
+#Copy systemd config. This is in it's own folder so no package overrides this
+mkdir $outmnt/etc/systemd/system.conf.d
+cp $build_resources/system.conf $outmnt/etc/systemd/system.conf.d
 
 #install hwdb file for iio-sensor-proxy to work
 printf 'sensor:modalias:platform:*\n ACCEL_MOUNT_MATRIX=-1, 0, 0; 0, -1, 0; 0, 0, -1\n' > $outmnt/etc/udev/hwdb.d/61-sensor-local.hwdb
