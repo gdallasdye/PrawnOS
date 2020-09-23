@@ -120,6 +120,7 @@ mkdir -p $initramfs_src
 mkdir $initramfs_src/bin
 mkdir $initramfs_src/dev
 mkdir $initramfs_src/etc
+mkdir $initramfs_src/etc/selinux
 mkdir $initramfs_src/newroot
 mkdir $initramfs_src/boot
 mkdir $initramfs_src/proc
@@ -163,6 +164,10 @@ cp $outmnt/lib/$LIBS_DIR/libgcc_s.so.1 $initramfs_src/lib/$LIBS_DIR/
 cp $RESOURCES/initramfs-init $initramfs_src/init
 chmod +x $initramfs_src/init
 cp $initramfs_src/init $initramfs_src/sbin/init
+
+#set selinux to permissive by default
+#the user or their operating system can choose to set enforcing once we're booted
+cp $RESOURCES/selinux-config $initramfs_src/etc/selinux/config
 
 #compress and install
 rm -rf $outmnt/boot/PrawnOS-initramfs.cpio
