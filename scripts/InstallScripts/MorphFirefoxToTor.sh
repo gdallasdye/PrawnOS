@@ -14,7 +14,7 @@ sudo rm -f /usr/lib/firefox-esr/prawn.cfg
 #Next, we remove then purge firefox-esr then install firefox-esr and tor
 sudo apt remove -y firefox-esr
 sudo apt purge -y firefox-esr
-sudo apt install -y firefox tor
+sudo apt install -y firefox-esr tor
 
 #Next, the user with UID 1000 is probably the only user. Let's add them to the tor group
 #TODO: may not be necessary?
