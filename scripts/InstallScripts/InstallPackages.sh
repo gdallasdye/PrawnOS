@@ -145,7 +145,7 @@ then
   patch /usr/bin/xflock4 < $DIR/xfce-config/xflock-xsecurelock.patch
 
   #Copy in wallpapers
-  rm /usr/share/images/desktop-base/default && cp $DIR/wallpapers/* /usr/share/images/desktop-base/
+  #rm /usr/share/images/desktop-base/default && cp $DIR/wallpapers/* /usr/share/images/desktop-base/
 
   #Install libinput-gestures and xfdashboard "packages"
   cd $DIR/packages/
@@ -159,11 +159,11 @@ then
   cp $DIR/xfce-config/libinput-gestures/libinput-gestures.desktop /etc/xdg/autostart/
 
   #Make plank autostart
-  cp $DIR/xfce-config/plank/plank.desktop /etc/xdg/autostart/
+  #cp $DIR/xfce-config/plank/plank.desktop /etc/xdg/autostart/
 
   #install plank launcher
-  mkdir -p /etc/skel/.config/plank/dock1/launchers/
-  cp -rf $DIR/xfce-config/plank/plank-launchers/* /etc/skel/.config/plank/dock1/launchers/
+  #mkdir -p /etc/skel/.config/plank/dock1/launchers/
+  #cp -rf $DIR/xfce-config/plank/plank-launchers/* /etc/skel/.config/plank/dock1/launchers/
 
   #install firefox-esr default settings
   cp $DIR/firefox-esr/prawn-settings.js /usr/lib/firefox-esr/defaults/pref/
