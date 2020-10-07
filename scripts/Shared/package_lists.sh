@@ -77,13 +77,12 @@ base_debs_download=(
     anacron
     avahi-daemon
     bluetooth
-    chromium
     crda
     dbus-user-session
     dpkg
     dkms
+    dtrx
     eject
-    emacs
     firefox-esr
     iw
     libnss-mdns
@@ -119,7 +118,6 @@ xfce_debs_download=(
     network-manager-openvpn-gnome
     numix-gtk-theme
     papirus-icon-theme
-    plank
     system-config-printer
     tango-icon-theme
     xfce4
