@@ -5,21 +5,16 @@
 ShrimpOS
 </h1>
 
-Basically PrawnOS but with _flashy_ new things including
-- Panfrost
-- Boot splash
-- WebGL
-- Testing Debian repositories
-- Blobs to make internal WiFi work
-- Newer kernel
+Since Google ended support for the c100pa and I always wanted Debian Stable on this device I though I would give to the cause.
+
+My goals are to have the built in hardware function in a ChromeOS-like way and have Debian freedom.
+I'd like access to Android and x86 apps if I can but a lightweight admin machine is the main goal.
+
+I want to thank the people who built devuan, prawn and shrimp for the veyron chromebooks. Keep the platform alive.
 
 
-Coming Soon™:
-- Box86 emulator by @ptitSeb
-- Wine from TwisterOS
-- Hardware accelerated VAAPI(if i can figure it out)
-- Xonotic
-- XNA games
 
 
-Currently only tested on armhf hardware, but if anyone donates a aarch64/arm64 laptop I will include support for it.
+
+
+
