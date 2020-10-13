@@ -176,8 +176,8 @@ create_image() {
   mount -o noatime ${2}p2 $5
 }
 
-# create a 2GB image with the Chrome OS partition layout
-create_image $BASE $outdev 50M 40 $outmnt
+# create a 3GB image with the Chrome OS partition layout
+create_image $BASE $outdev 50M 60 $outmnt
 
 # use default debootstrap mirror if none is specified
 if [ "$PRAWNOS_DEBOOTSTRAP_MIRROR" = "" ]
@@ -218,13 +218,13 @@ cp $build_resources_apt/prawnos.list $outmnt/etc/apt/sources.list.d/
 cp $build_resources_apt/docker.list $outmnt/etc/apt/sources.list.d/
 sed -i -e "s/suite/$DEBIAN_SUITE/g" $outmnt/etc/apt/sources.list
 sed -i -e "s/suite/$DEBIAN_SUITE/g" $outmnt/etc/apt/sources.list.d/prawnos.list
-if [ "$DEBIAN_SUITE" != "sid" ] && [ "$DEBIAN_SUITE" != "testing" ]
+if [ "$DEBIAN_SUITE" != "sid" ] && [ "$DEBIAN_SUITE" != "buster" ]
 then
     # sid doesn't have updates or security; they're present for all other suites
     cat $build_resources_apt/updates.list >> $outmnt/etc/apt/sources.list
     sed -i -e "s/suite/$DEBIAN_SUITE/g" $outmnt/etc/apt/sources.list
     # sid doesn't have backports; it's present for all other suites
-    #cp $build_resources_apt/backports.list $outmnt/etc/apt/sources.list.d/
+    cp $build_resources_apt/backports.list $outmnt/etc/apt/sources.list.d/
     sed -i -e "s/suite/$DEBIAN_SUITE/g" $outmnt/etc/apt/sources.list.d/backports.list
     #setup apt pinning
     cp $build_resources_apt/backports.pref $outmnt/etc/apt/preferences.d/
@@ -320,7 +320,7 @@ apt_install $PRAWNOS_BUILD $outmnt false ${mesa_debs_download[@]}
 
 #Cleanup hosts
 rm -rf $outmnt/etc/hosts #This is what https://wiki.debian.org/EmDebian/CrossDebootstrap suggests
-echo -n "127.0.0.1        PrawnOS" > $outmnt/etc/hosts
+echo -n "127.0.0.1        ShrimpOS" > $outmnt/etc/hosts
 
 #Cleanup apt retry
 chroot $outmnt rm -f /etc/apt/apt.conf.d/80-retries
