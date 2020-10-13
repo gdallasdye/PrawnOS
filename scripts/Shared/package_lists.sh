@@ -37,6 +37,8 @@ base_debs_install=(
     ca-certificates
     cgpt
     cryptsetup
+    curl
+    dtrx
     e2fsprogs-l10n
     gdisk
     git
@@ -60,6 +62,7 @@ base_debs_install=(
     network-manager
     parted
     psmisc
+    python3-pip
     rsync
     traceroute
     udev
@@ -81,7 +84,6 @@ base_debs_download=(
     dbus-user-session
     dpkg
     dkms
-    dtrx
     eject
     firefox-esr
     iw
@@ -91,7 +93,6 @@ base_debs_download=(
     sudo
     sysfsutils
     tasksel
-    vlc
     xdg-utils
     xorg
     xserver-xorg-input-libinput
