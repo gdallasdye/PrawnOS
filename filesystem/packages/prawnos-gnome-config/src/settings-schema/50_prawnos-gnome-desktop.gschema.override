@@ -30,4 +30,20 @@ idle-delay=uint32 0
 
 [org.gnome.settings-daemon.plugins.power]
 sleep-inactive-ac-timeout=1800
-sleep-inactive-battery-timeout=1800
+sleep-inactive-battery-timeout=1800[org/gnome/desktop/wm/keybindings]
+switch-to-workspace-down=['F2']
+switch-to-workspace-up=['F1']
+toggle-fullscreen=['F4']
+
+[org/gnome/settings-daemon/plugins/media-keys]
+screen-brightness-down=['F6']
+screen-brightness-up=['F7']
+screenshot=['F5']
+volume-down=['F9']
+volume-mute=['F8']
+volume-up=['F10']
+
+[org/gnome/settings-daemon/plugins/power]
+idle-dim=false
+power-button-action='interactive'
+
