@@ -6,16 +6,17 @@ on: [push, pull_request]
 jobs:
   build:
     name: build
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: checkout project
         uses: actions/checkout@v2
       - name: build image
-        run: docker run --mount type=bind,source=$PWD,target=/PrawnOS
-             --privileged=true -v/dev:/dev debian:buster
+        run: sudo dpkg -i ./tests/resources/qemu-user-static_5.1+dfsg-4+b1_amd64.deb && 
+             docker run --mount type=bind,source=$PWD,target=/PrawnOS
+             --privileged -v/dev:/dev debian:bullseye
              /bin/bash /PrawnOS/tests/build-image.sh "$GITHUB_SHA" armhf Shiba
       - name: publish image
         uses: actions/upload-artifact@v2
         with:
-          name: "PrawnOS-Shiba-armhf-git-${GITHUB_SHA}.img.xz"
-          path: "PrawnOS-Shiba-armhf-git-${GITHUB_SHA}.img.xz"
+          name: "PrawnOS-Shiba-armhf-git-${{ github.sha }}.img.xz"
+          path: "PrawnOS-Shiba-armhf-git-${{ github.sha }}.img.xz"

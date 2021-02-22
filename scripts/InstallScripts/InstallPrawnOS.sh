@@ -17,14 +17,17 @@
 # You should have received a copy of the GNU General Public License
 # along with PrawnOS.  If not, see <https://www.gnu.org/licenses/>.
 
-RESOURCES=/InstallResources
 # Grab the boot device, which is either /dev/sda for usb or /dev/mmcblk(0/1) for an sd card
 BOOT_DEVICE=$(mount | head -n 1 | cut -d '2' -f 1)
 
 ### SHARED CONST AND VARS
+RESOURCES=/etc/prawnos/install/resources
+SCRIPTS=/etc/prawnos/install/scripts
+
 # TODO: when these scripts are packaged, place these in a shared script instead of in every file that needs them
 device_veyron_speedy="Google Speedy"
 device_veyron_minnie="Google Minnie"
+device_veyron_mickey="Google Mickey"
 device_gru_kevin="Google Kevin"
 device_gru_bob="Google Bob"
 
@@ -34,14 +37,11 @@ get_device() {
 }
 
 get_emmc_devname() {
-    local device=$(get_device)
-    case "$device" in
-        $device_veyron_speedy) local devname=mmcblk2;;
-        $device_veyron_minnie) local devname=mmcblk2;;
-        $device_gru_kevin) local devname=mmcblk1;;
-        $device_gru_bob) local devname=mmcblk1;;
-        * ) echo "Unknown device! can't determine emmc devname. Please file an issue with the output of fdisk -l if you get this on a supported device"; exit 1;;
-    esac
+    local devname=$(ls /dev/mmcblk* | grep -F boot0 | sed "s/boot0//")
+    if [ -z "$devname" ]
+    then
+        echo "Unknown device! can't determine emmc devname. Please file an issue with the output of fdisk -l if you get this on a supported device"; exit 1;;
+    fi
     echo $devname
 }
 
@@ -51,6 +51,7 @@ get_sd_devname() {
     case "$device" in
         $device_veyron_speedy) local devname=mmcblk0;;
         $device_veyron_minnie) local devname=mmcblk0;;
+        $device_veyron_mickey) local devname="";;
         $device_gru_kevin) local devname=mmcblk0;;
         $device_gru_bob) local devname=mmcblk0;;
         * ) echo "Unknown device! can't determine sd card devname. Please file an issue with the output of fdisk -l if you get this on a supported device"; exit 1;;
@@ -160,9 +161,9 @@ install() {
     ROOT_PARTITION=${TARGET}2
     CRYPTO=false
 
-    echo Writing kernel partition
-    dd if=/dev/zero of=$KERNEL_PARTITION bs=512 count=131072
-    dd if=${BOOT_DEVICE}1 of=$KERNEL_PARTITION conv=notrunc
+    echo Writing kernel to partition $KERNEL_PARTITION
+    dd if=/dev/zero of=$KERNEL_PARTITION bs=512 count=65536
+    dd if=${BOOT_DEVICE}1 of=$KERNEL_PARTITION
 
     #Handle full disk encryption
     echo "Would you like to setup full disk encrytion using LUKs/DmCrypt?"
@@ -191,11 +192,12 @@ install() {
         esac
     done
 
-    echo Writing Filesystem, this will take about 4 minutes...
+    echo Creating ext4 filesystem on root partition
     mkfs.ext4 -F -b 1024 $ROOT_PARTITION
     INSTALL_MOUNT=/mnt/install_mount
     mkdir -p $INSTALL_MOUNT/
     mount $ROOT_PARTITION $INSTALL_MOUNT/
+    echo Syncing live root filesystem with new root filesystem, this will take about 4 minutes...
     rsync -ah --info=progress2 --info=name0 --numeric-ids -x / $INSTALL_MOUNT/
     #Remove the live-fstab and install a base fstab
     rm $INSTALL_MOUNT/etc/fstab
@@ -209,7 +211,16 @@ install() {
             * ) echo "Please answer y or n";;
         esac
     done
+
+    # final setup:
+    dmesg -D
+    welcome
+    setup_users $INSTALL_MOUNT
+    setup_hostname $INSTALL_MOUNT
+    dmesg -E
+
     umount $ROOT_PARTITION
+
     echo Running fsck
     e2fsck -p -f $ROOT_PARTITION
     if [[ $CRYPTO == "true" ]]
@@ -271,7 +282,7 @@ emmc_partition() {
 external_partition() {
     EXTERNAL_TARGET=$1
     kernel_start=8192
-    kernel_size=131072
+    kernel_size=65536
     #wipe the partition map, cgpt doesn't like anything weird in the primary or backup partition maps
     sgdisk -Z $EXTERNAL_TARGET
     partprobe $EXTERNAL_TARGET
@@ -317,31 +328,122 @@ expand() {
     while true; do
         read -r -p "Install a desktop environment and the supporting packages? [Y/n]" ins
         case $ins in
-            [Yy]* ) /InstallResources/InstallPackages.sh; reboot;;
+            [Yy]* ) $SCRIPTS/InstallPackages.sh; reboot;;
             [Nn]* ) exit;;
             * ) echo "Please answer y or n";;
         esac
     done
 
+    dmesg -D
+    welcome
+    setup_users
+    setup_hostname
+    dmesg -E
+}
 
+# helper for install_packages()/setup_users()
+chroot_wrapper() {
+    local mountpoint="$1"
+    shift
+
+    mount -t proc proc "$mountpoint/proc/"
+    mount --rbind /sys "$mountpoint/sys/"
+    mount --rbind /dev "$mountpoint/dev/"
+
+    chroot "$mountpoint" $@
+
+    umount "$mountpoint/proc/"
+    mount --make-rprivate /sys
+    mount --make-rprivate /dev
+    umount -R "$mountpoint/sys/"
+    umount -R "$mountpoint/dev/"
 }
 
 #Install all packages, desktop environment to target device
+
 install_packages() {
     TARGET_MOUNT=$1
     echo "Installing Packages"
-    mount -t proc proc $TARGET_MOUNT/proc/
-    mount --rbind /sys $TARGET_MOUNT/sys/
-    mount --rbind /dev $TARGET_MOUNT/dev/
-    chroot $TARGET_MOUNT/ ./InstallResources/InstallPackages.sh
-    umount $TARGET_MOUNT/proc/
-    mount --make-rprivate /sys
-    mount --make-rprivate /dev
-    umount -R $TARGET_MOUNT/sys/
-    umount -R $TARGET_MOUNT/dev/
-
+    chroot_wrapper "$TARGET_MOUNT" .$SCRIPTS/InstallPackages.sh
+    desktop=true
 }
 
+setup_hostname() {
+    TARGET_MOUNT="$1"
+
+    #this works fine in the expansion use as TARGET_MOUNT is simply empty
+
+    while true; do
+        read -r -p "Would you like to set a custom hostname (default: PrawnOS)? [y/n]" response
+        case $response in
+            [Yy]*)
+                echo "-----Enter hostname:-----"
+                read -r hostname
+                # ensure no whitespace
+                case "$hostname" in *\ *) echo hostnames may not contain whitespace;;  *) break;; esac
+                ;;
+            [Nn]* ) hostname="PrawnOS"; break;;
+            * ) echo "Please answer y or n";;
+        esac
+    done
+
+    # Setup /etc/hostname and /etc/hosts:
+    echo -n "$hostname" > "$TARGET_MOUNT/etc/hostname"
+    echo -n "127.0.0.1        $hostname" > "$TARGET_MOUNT/etc/hosts"
+}
+
+setup_users() {
+    TARGET_MOUNT="$1"
+
+    #handle when we use this for expansion
+    if [ -z "$TARGET_MOUNT" ]
+    then
+        CHROOT_PREFIX=""
+
+    else
+        CHROOT_PREFIX=chroot_wrapper "$TARGET_MOUNT"
+    fi
+
+    # Have the user set a root password
+    echo "-----Enter a password for the root user-----"
+    until $CHROOT_PREFIX passwd
+    do
+        echo "-----Enter a password for the root user-----"
+        $CHROOT_PREFIX passwd
+    done
+
+    if [[ "$desktop" = "true" ]]; then
+        #Force a safe username
+        while true; do
+            echo "-----Enter new username:-----"
+                read -r username
+                #ensure no whitespace
+                case "$username" in *\ *) echo usernames may not contain whitespace;;  *) break;; esac
+            done
+        until $CHROOT_PREFIX adduser "$username" --gecos "$username"
+        do
+            while true; do
+                echo "-----Enter new username:-----"
+                read -r username
+                #ensure no whitespace
+                case "$username" in *\ *) echo usernames may not contain whitespace;;  *) break;; esac
+            done
+        done
+        $CHROOT_PREFIX usermod -a -G sudo,netdev,input,video,bluetooth "$username"
+    fi
+}
+
+
+welcome() {
+    echo ""
+    echo ""
+    echo ""
+
+    cat $RESOURCES/ascii-icon.txt
+    echo ""
+    echo "*************Welcome To PrawnOS*************"
+    echo ""
+}
 
 #call the main function, script technically starts here
 #Organized this way so that main can come before the functions it calls
